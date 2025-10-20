@@ -1,25 +1,20 @@
 {% include 'cabecalho.html' %}
+{% include 'menu.html' %}
 
-
-<h1 class="mb-4">Lista de Alunos</h1>
-
-
-
-
-
+<h1 class="mb-4">Lista de Professores</h1>
 
     <table class="table table-bordered table-striped">
         <thead class="table-dark">
         <tr>
             <th>ID</th>
             <th>Nome</th>
-            <th>Idade</th>
+            <th>Disciplina</th>
             <th>Cidade</th>
             <th>Ações</th>
         </tr>
     </thead>
     <tbody>
-        {% for item in lista_alunos %}
+        {% for item in lista_professores %}
         <tr>
             <td>{{ item[0] }}</td>
             <td>{{ item[1] }}</td>
@@ -33,6 +28,4 @@
     </tbody>
     </table>
     
-
-
-    {% include 'rodape.html' %}
+{% include 'rodape.html' %}
