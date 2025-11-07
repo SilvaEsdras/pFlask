@@ -1,0 +1,29 @@
+{% include 'cabecalho.html' %}
+{% include 'menu.html' %}
+
+<h1 class="mb-4">Desafio - Formulário de Cadastro</h1>
+<div class="row">
+    <div class="col-md-8">
+        <form action="/desafio/enviar" method="POST">
+            <div class="mb-3">
+                <label for="nome" class="form-label">Nome Completo</label>
+                <input type="text" class="form-control" id="nome" name="nome" required>
+            </div>
+            <div class="mb-3">
+                <label for="data_nascimento" class="form-label">Data de Nascimento</label>
+                <input type="date" class="form-control" id="data_nascimento" name="data_nascimento" required>
+            </div>
+            <div class="mb-3">
+                <label for="cpf" class="form-label">CPF</label>
+                <input type="text" class="form-control" id="cpf" name="cpf" required>
+            </div>
+            <div class="mb-3">
+                <label for="nome_mae" class="form-label">Nome da Mãe</label>
+                <input type="text" class="form-control" id="nome_mae" name="nome_mae" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Enviar Cadastro</button>
+        </form>
+    </div>
+</div>
+
+{% include 'rodape.html' %}
