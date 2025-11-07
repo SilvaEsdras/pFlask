@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request # Verificar se 'request' já foi importado
+from flask import Flask, render_template, request
 from dao.aluno_dao import AlunoDAO
 from dao.professor_dao import ProfessorDAO
 from dao.curso_dao import CursoDAO
@@ -36,7 +36,7 @@ def sobre_sistema():
 def ajuda_sistema():
     return render_template('ajuda.html')
 
-# --- INÍCIO DA SOLUÇÃO DO EXERCÍCIO ---
+
 @app.route('/saudacao1/<nome>')
 def saudacao1(nome):
     return render_template('saudacao/saudacao.html', valor_recebido=nome)
@@ -52,30 +52,26 @@ def login():
     senha = request.form['senha']
     dados = f"Usuário: {usuario}, Senha: {senha}"
     return render_template('saudacao/saudacao.html', valor_recebido=dados)
-# --- FIM DA SOLUÇÃO DO EXERCÍCIO ---
 
 
-# --- INÍCIO DA SOLUÇÃO DO DESAFIO [cite: 118] ---
-
-# Rota para EXIBIR o formulário de cadastro
 @app.route('/desafio')
 def desafio_formulario():
     return render_template('desafio/formulario.html')
 
-# Rota para RECEBER os dados do formulário via POST
+
 @app.route('/desafio/enviar', methods=['POST'])
 def desafio_enviar():
-    # Coleta todos os dados do formulário [cite: 119-123]
+
     dados = {
         "nome": request.form['nome'],
         "data_nascimento": request.form['data_nascimento'],
         "cpf": request.form['cpf'],
         "nome_mae": request.form['nome_mae']
     }
-    # Envia os dados coletados para o template de resultado [cite: 124]
+ 
     return render_template('desafio/resultado.html', dados=dados)
 
-# --- FIM DA SOLUÇÃO DO DESAFIO ---
+
 
 
 if __name__ == '__main__':
