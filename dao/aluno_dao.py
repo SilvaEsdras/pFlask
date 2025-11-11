@@ -1,7 +1,28 @@
 from dao.db_config import get_connection
 
-class AlunoDAO: 
+class AlunoDAO:
     sqlSelect = 'SELECT id, nome, idade, cidade FROM aluno'
+    
+    # Método Salvar (Inserir) 
+    # Corrigido para usar '?' (SQLite) em vez de '%s'
+    def salvar(self, id, nome, idade, cidade):
+        conn = get_connection()
+        cursor = conn.cursor()
+        try:
+            # Por enquanto, id=None indica uma INSERÇÃO
+            if id is None:
+                cursor.execute(
+                    'INSERT INTO aluno (nome, idade, cidade) VALUES (%s, %s, %s)',
+                    (nome, idade, cidade)
+                )
+            # (Futuramente, um 'else' aqui lidaria com a ATUALIZAÇÃO)
+            
+            conn.commit()
+            return {"status": "ok"}
+        except Exception as e:
+            return {"status": "erro", "mensagem": f"Erro: {str(e)}"}
+        finally:
+            conn.close()
 
     def listar(self):
         conn = get_connection()

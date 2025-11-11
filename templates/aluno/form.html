@@ -1,0 +1,29 @@
+{% include 'cabecalho.html' %}
+{% include 'menu.html' %}
+
+<h1 class="mb-4">Cadastrar Aluno</h1>
+
+<form action="/aluno/salvar/" method="POST">
+    
+    <div class="mb-3">
+        <label for="nome" class="form-label">Nome</label>
+        <input type="text" class="form-control" id="nome" name="nome" value="{{ aluno[1] if aluno else '' }}" required>
+    </div>
+    
+    <div class="mb-3">
+        <label for="idade" class="form-label">Idade</label>
+        <input type="number" class="form-control" id="idade" name="idade" value="{{ aluno[2] if aluno else '' }}" required>
+    </div>
+    
+    <div class="mb-3">
+        <label for="cidade" class="form-label">Cidade</label>
+        <input type="text" class="form-control" id="cidade" name="cidade" value="{{ aluno[3] if aluno else '' }}" required>
+    </div>
+    
+    <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-primary">Salvar</button>
+        <a href="/aluno" class="btn btn-secondary">Cancelar</a>
+    </div>
+</form>
+
+{% include 'rodape.html' %}

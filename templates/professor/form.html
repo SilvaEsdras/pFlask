@@ -1,0 +1,29 @@
+{% include 'cabecalho.html' %}
+{% include 'menu.html' %}
+
+<h1 class="mb-4">Cadastrar Professor</h1>
+
+<form action="/professor/salvar/" method="POST">
+    
+    <div class="mb-3">
+        <label for="nome" class="form-label">Nome</label>
+        <input type="text" class="form-control" id="nome" name="nome" value="{{ professor[1] if professor else '' }}" required>
+    </div>
+    
+    <div class="mb-3">
+        <label for="disciplina" class="form-label">Disciplina</label>
+        <input type="text" class="form-control" id="disciplina" name="disciplina" value="{{ professor[2] if professor else '' }}" required>
+    </div>
+    
+    <div class="mb-3">
+        <label for="cidade" class="form-label">Cidade</label>
+        <input type="text" class="form-control" id="cidade" name="cidade" value="{{ professor[3] if professor else '' }}" required>
+    </div>
+    
+    <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-primary">Salvar</button>
+        <a href="/professor" class="btn btn-secondary">Cancelar</a>
+    </div>
+</form>
+
+{% include 'rodape.html' %}

@@ -1,0 +1,29 @@
+{% include 'cabecalho.html' %}
+{% include 'menu.html' %}
+
+<h1 class="mb-4">Cadastrar Curso</h1>
+
+<form action="/curso/salvar/" method="POST">
+    
+    <div class="mb-3">
+        <label for="nome" class="form-label">Nome</Glabel>
+        <input type="text" class="form-control" id="nome" name="nome" value="{{ curso[1] if curso else '' }}" required>
+    </div>
+    
+    <div class="mb-3">
+        <label for="duracao_meses" class="form-label">Duração (Meses)</label>
+        <input type="number" class="form-control" id="duracao_meses" name="duracao_meses" value="{{ curso[2] if curso else '' }}" required>
+    </div>
+    
+    <div class="mb-3">
+        <label for="coordenador" class="form-label">Coordenador</label>
+        <input type="text" class="form-control" id="coordenador" name="coordenador" value="{{ curso[3] if curso else '' }}" required>
+    </div>
+    
+    <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-primary">Salvar</button>
+        <a href="/curso" class="btn btn-secondary">Cancelar</a>
+    </div>
+</form>
+
+{% include 'rodape.html' %}
