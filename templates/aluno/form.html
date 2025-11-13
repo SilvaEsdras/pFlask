@@ -1,9 +1,9 @@
 {% include 'cabecalho.html' %}
 {% include 'menu.html' %}
 
-<h1 class="mb-4">Cadastrar Aluno</h1>
+<h1 class="mb-4">{{ 'Editar Aluno' if aluno else 'Cadastrar Aluno' }}</h1>
 
-<form action="/aluno/salvar/" method="POST">
+<form action="/aluno/salvar/{{ aluno[0] if aluno else '' }}" method="POST">
     
     <div class="mb-3">
         <label for="nome" class="form-label">Nome</label>

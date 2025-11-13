@@ -13,7 +13,6 @@
             <th>ID</th>
             <th>Nome</th>
             <th>Disciplina</th>
-            <th>Cidade</th>
             <th>Ações</th>
         </tr>
     </thead>
@@ -23,9 +22,12 @@
             <td>{{ item[0] }}</td>
             <td>{{ item[1] }}</td>
             <td>{{ item[2] }}</td>
-            <td>{{ item[3] }}</td>
             <td>
-              
+                 <a href="/professor/editar/{{ item[0] }}" class="btn btn-primary btn-sm">Editar</a>
+                 <a href="/professor/remover/{{ item[0] }}" class="btn btn-danger btn-sm" 
+                   onclick="return confirm('Tem certeza que deseja remover este registro?');">
+                   Remover
+                </a>
             </td>
         </tr>
         {% endfor %}

@@ -1,18 +1,28 @@
+# Em: dao/curso_dao.py
+
 from dao.db_config import get_connection
 
 class CursoDAO:
-    # Assumindo que o SELECT * retorna (id, nome, duracao_meses, coordenador)
-    sqlSelect = 'SELECT * FROM curso'
+    # 1. CORREÇÃO: Selecione apenas as colunas que existem
+    sqlSelect = 'SELECT id, nome_curso, duracao FROM curso'
     
-    # Método Salvar (Inserir) para Curso
-    def salvar(self, id, nome_curso, duracao_meses, coordenador):
+    # 2. CORREÇÃO: O form envia 'nome' e 'duracao_meses', 
+    # mas o DB espera 'nome_curso' e 'duracao'
+    def salvar(self, id, nome, duracao): 
         conn = get_connection()
         cursor = conn.cursor()
         try:
-            if id is None:
+            if id: # UPDATE
                 cursor.execute(
-                    'INSERT INTO curso (nome_curso, duracao_meses, coordenador) VALUES (%s, %s, %s)',
-                    (nome_curso, duracao_meses, coordenador)
+                    # Use 'nome_curso' e 'duracao'
+                    'UPDATE curso SET nome_curso = %s, duracao = %s WHERE id = %s',
+                    (nome, duracao, id)
+                )
+            else: # INSERT
+                cursor.execute(
+                    # Use 'nome_curso' e 'duracao'
+                    'INSERT INTO curso (nome_curso, duracao) VALUES (%s, %s)',
+                    (nome, duracao)
                 )
             
             conn.commit()
@@ -29,3 +39,25 @@ class CursoDAO:
         lista = cursor.fetchall()
         conn.close()
         return lista
+
+    # 3. CORREÇÃO: Ajuste o buscar_por_id
+    def buscar_por_id(self, id):
+        conn = get_connection()
+        cursor = conn.cursor()
+        # Selecione apenas as colunas que existem
+        cursor.execute('SELECT id, nome_curso, duracao FROM curso WHERE id = %s', (id,)) 
+        registro = cursor.fetchone() 
+        conn.close()
+        return registro
+
+    def remover(self, id):
+        conn = get_connection()
+        cursor = conn.cursor()
+        try:
+            cursor.execute('DELETE FROM curso WHERE id = %s', (id,))
+            conn.commit()
+            return {"status": "ok"}
+        except Exception as e:
+            return {"status": "erro", "mensagem": f"Erro: {str(e)}"}
+        finally:
+            conn.close()
