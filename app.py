@@ -3,6 +3,7 @@ from flask import Flask, render_template, request, redirect, flash
 from dao.aluno_dao import AlunoDAO
 from dao.professor_dao import ProfessorDAO
 from dao.curso_dao import CursoDAO
+from dao.turma_dao import TurmaDAO # <--- ADICIONADO
 
 app = Flask(__name__)
 
@@ -13,8 +14,7 @@ app.secret_key = "uma_chave_muito_secreta_e_unica"
 def home():
     return render_template('index.html') 
 
-# --- ROTAS DE ALUNO ---
-
+# --- ROTAS DE ALUNO (Existentes) ---
 @app.route('/aluno')
 def listar_aluno():
     dao = AlunoDAO()
@@ -25,32 +25,26 @@ def listar_aluno():
 def form_aluno():
     return render_template('aluno/form.html', aluno=None)
 
-# Rota de EDIÇÃO de Aluno
 @app.route('/aluno/editar/<int:id>')
 def editar_aluno(id):
     dao = AlunoDAO()
-    aluno = dao.buscar_por_id(id) # Busca o aluno no DB
-    return render_template('aluno/form.html', aluno=aluno) # Envia para o form
+    aluno = dao.buscar_por_id(id)
+    return render_template('aluno/form.html', aluno=aluno)
 
-# Rotas de SALVAR (INSERT e UPDATE)
-@app.route('/aluno/salvar/', methods=['POST']) # Rota para INSERIR (id=None)
-@app.route('/aluno/salvar/<int:id>', methods=['POST']) # Rota para ATUALIZAR (id informado)
+@app.route('/aluno/salvar/', methods=['POST'])
+@app.route('/aluno/salvar/<int:id>', methods=['POST'])
 def salvar_aluno(id=None):
     nome = request.form['nome']
     idade = request.form['idade']
     cidade = request.form['cidade']
-    
     dao = AlunoDAO()
     result = dao.salvar(id, nome, idade, cidade)
-
     if result["status"] == "ok":
         flash(f"Aluno '{nome}' salvo com sucesso!", "success")
     else:
         flash(result["mensagem"], "danger")
-
     return redirect('/aluno')
 
-# Rota de REMOVER Aluno
 @app.route("/aluno/remover/<int:id>")
 def remover_aluno(id):
     dao = AlunoDAO()
@@ -61,8 +55,7 @@ def remover_aluno(id):
         flash(resultado["mensagem"], "danger")
     return redirect('/aluno')
 
-# --- ROTAS DE PROFESSOR (Exercício) ---
-
+# --- ROTAS DE PROFESSOR (Existentes) ---
 @app.route('/professor')
 def listar_professor():
     dao = ProfessorDAO()
@@ -79,25 +72,17 @@ def editar_professor(id):
     professor = dao.buscar_por_id(id)
     return render_template('professor/form.html', professor=professor)
 
-# 6. Rota para salvar um novo professor
 @app.route('/professor/salvar/', methods=['POST'])
 @app.route('/professor/salvar/<int:id>', methods=['POST'])
 def salvar_professor(id=None):
-    # Coleta os dados do formulário (Nome, Disciplina)
     nome = request.form['nome']
     disciplina = request.form['disciplina']
-    # 1. CORREÇÃO: Remova a linha abaixo
-    # cidade = request.form['cidade'] 
-    
     dao = ProfessorDAO()
-    # 2. CORREÇÃO: Remova 'cidade' da chamada do método
     result = dao.salvar(id, nome, disciplina) 
-
     if result["status"] == "ok":
         flash("Professor salvo com sucesso!", "success")
     else:
         flash(result["mensagem"], "danger")
-
     return redirect('/professor')
 
 @app.route("/professor/remover/<int:id>")
@@ -110,8 +95,7 @@ def remover_professor(id):
         flash(resultado["mensagem"], "danger")
     return redirect('/professor')
 
-# --- ROTAS DE CURSO (Exercício) ---
-
+# --- ROTAS DE CURSO (Existentes) ---
 @app.route('/curso')
 def listar_curso():
     dao = CursoDAO()
@@ -131,23 +115,14 @@ def editar_curso(id):
 @app.route('/curso/salvar/', methods=['POST'])
 @app.route('/curso/salvar/<int:id>', methods=['POST'])
 def salvar_curso(id=None):
-    # Coleta os dados (Nome, Duracao)
     nome = request.form['nome']
-    # 1. CORREÇÃO: O form envia 'duracao_meses', o DB espera 'duracao'
     duracao = request.form['duracao_meses'] 
-    
-    # 2. CORREÇÃO: Remova a linha abaixo, pois a coluna 'coordenador' não existe
-    # coordenador = request.form['coordenador'] 
-    
     dao = CursoDAO()
-    # 3. CORREÇÃO: Passe 'duracao', e não 'coordenador'
     result = dao.salvar(id, nome, duracao) 
-
     if result["status"] == "ok":
         flash(f"Curso '{nome}' salvo com sucesso!", "success")
     else:
         flash(result["mensagem"], "danger")
-
     return redirect('/curso')
 
 @app.route("/curso/remover/<int:id>")
@@ -160,8 +135,72 @@ def remover_curso(id):
         flash(resultado["mensagem"], "danger")
     return redirect('/curso')
 
-# --- Rotas dos exercícios anteriores ---
 
+# --- INÍCIO DAS NOVAS ROTAS DE TURMA ---
+
+@app.route('/turma')
+def listar_turma():
+    dao = TurmaDAO()
+    lista_turmas = dao.listar()
+    return render_template('turma/lista.html', lista_turmas=lista_turmas)
+
+@app.route('/turma/form')
+def form_turma():
+    # Buscamos as listas para popular os <select>
+    lista_professores = ProfessorDAO().listar()
+    lista_cursos = CursoDAO().listar()
+    return render_template('turma/form.html',
+                           turma=None,
+                           lista_professores=lista_professores,
+                           lista_cursos=lista_cursos)
+
+@app.route('/turma/editar/<int:id>')
+def editar_turma(id):
+    # Buscamos as listas para os <select>
+    lista_professores = ProfessorDAO().listar()
+    lista_cursos = CursoDAO().listar()
+    
+    # Buscamos os dados da turma específica
+    dao = TurmaDAO()
+    turma = dao.buscar_por_id(id)
+    
+    return render_template('turma/form.html',
+                           turma=turma,
+                           lista_professores=lista_professores,
+                           lista_cursos=lista_cursos)
+
+@app.route('/turma/salvar/', methods=['POST'])
+@app.route('/turma/salvar/<int:id>', methods=['POST'])
+def salvar_turma(id=None):
+    # Coletamos os dados do formulário
+    semestre = request.form['semestre']
+    curso_id = request.form['curso_id']
+    professor_id = request.form['professor_id']
+    
+    dao = TurmaDAO()
+    resultado = dao.salvar(id, semestre, curso_id, professor_id)
+    
+    if resultado["status"] == "ok":
+        flash("Turma salva com sucesso!", "success")
+    else:
+        flash(resultado["mensagem"], "danger")
+        
+    return redirect('/turma')
+
+@app.route("/turma/remover/<int:id>")
+def remover_turma(id):
+    dao = TurmaDAO()
+    resultado = dao.remover(id)
+    if resultado["status"] == "ok":
+        flash("Registro removido com sucesso!", "success")
+    else:
+        flash(resultado["mensagem"], "danger")
+    return redirect('/turma')
+
+# --- FIM DAS ROTAS DE TURMA ---
+
+
+# --- Rotas dos exercícios anteriores ---
 @app.route('/sobre')
 def sobre_sistema():
     return render_template('sobre.html')
