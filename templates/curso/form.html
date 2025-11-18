@@ -7,12 +7,27 @@
     
     <div class="mb-3">
         <label for="nome" class="form-label">Nome</label>
-        <input type="text" class="form-control" id="nome" name="nome" value="{{ curso[1] if curso else '' }}" required>
+        <select class="form-select" id="nome" name="nome" required>
+            <option value="" disabled {{ 'selected' if not curso }}>Selecione um curso...</option>
+            <option value="Informática" {{ 'selected' if curso and curso[1] == 'Informática' }}>Informática</option>
+            <option value="Enfermagem" {{ 'selected' if curso and curso[1] == 'Enfermagem' }}>Enfermagem</option>
+            <option value="Administração" {{ 'selected' if curso and curso[1] == 'Administração' }}>Administração</option>
+            <option value="Eletrotécnica" {{ 'selected' if curso and curso[1] == 'Eletrotécnica' }}>Eletrotécnica</option>
+            <option value="Mecânica" {{ 'selected' if curso and curso[1] == 'Mecânica' }}>Mecânica</option>
+            <option value="Redes de Computadores" {{ 'selected' if curso and curso[1] == 'Redes de Computadores' }}>Redes de Computadores</option>
+            <option value="Segurança do Trabalho" {{ 'selected' if curso and curso[1] == 'Segurança do Trabalho' }}>Segurança do Trabalho</option>
+        </select>
     </div>
     
     <div class="mb-3">
-        <label for="duracao_meses" class="form-label">Duração (Meses)</label>
-        <input type="number" class="form-control" id="duracao_meses" name="duracao_meses" value="{{ curso[2] if curso else '' }}" required>
+        <label for="duracao_meses" class="form-label">Duração</label>
+        <select class="form-select" id="duracao_meses" name="duracao_meses" required>
+            <option value="" disabled {{ 'selected' if not curso }}>Selecione a duração...</option>
+            <option value="6" {{ 'selected' if curso and curso[2] == 6 }}>6 Meses (Rápido)</option>
+            <option value="12" {{ 'selected' if curso and curso[2] == 12 }}>12 Meses (1 Ano)</option>
+            <option value="24" {{ 'selected' if curso and curso[2] == 24 }}>24 Meses (Técnico)</option>
+            <option value="48" {{ 'selected' if curso and curso[2] == 48 }}>48 Meses (Bacharelado)</option>
+        </select>
     </div>
     
     <div class="d-flex gap-2">

@@ -10,14 +10,13 @@
             <div class="mb-3">
                 <label for="semestre" class="form-label">Semestre</label>
                 <input type="text" class="form-control" id="semestre" name="semestre" 
-                       value="{{ turma[1] if turma else '' }}" required>
+                       value="{{ turma[1] if turma else '' }}" required placeholder="Ex: 2024.1">
             </div>
 
             <div class="mb-3">
                 <label for="curso_id" class="form-label">Curso</label>
                 <select name="curso_id" id="curso_id" class="form-select" required>
                     <option value="">Selecione um curso...</option>
-                    
                     {% for curso in lista_cursos %}
                         <option value="{{ curso[0] }}" 
                                 {% if turma and curso[0] == turma[2] %}selected{% endif %}>
@@ -31,7 +30,6 @@
                 <label for="professor_id" class="form-label">Professor</label>
                 <select name="professor_id" id="professor_id" class="form-select" required>
                     <option value="">Selecione um professor...</option>
-                    
                     {% for prof in lista_professores %}
                         <option value="{{ prof[0] }}" 
                                 {% if turma and prof[0] == turma[3] %}selected{% endif %}>

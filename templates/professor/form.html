@@ -12,7 +12,14 @@
     
     <div class="mb-3">
         <label for="disciplina" class="form-label">Disciplina</label>
-        <input type="text" class="form-control" id="disciplina" name="disciplina" value="{{ professor[2] if professor else '' }}" required>
+        <select class="form-select" id="disciplina" name="disciplina" required>
+            <option value="" disabled {{ 'selected' if not professor }}>Selecione uma disciplina...</option>
+            <option value="Matemática" {{ 'selected' if professor and professor[2] == 'Matemática' }}>Matemática</option>
+            <option value="Português" {{ 'selected' if professor and professor[2] == 'Português' }}>Português</option>
+            <option value="Biologia" {{ 'selected' if professor and professor[2] == 'Biologia' }}>Biologia</option>
+            <option value="Informática" {{ 'selected' if professor and professor[2] == 'Informática' }}>Informática</option>
+            <option value="Banco de Dados" {{ 'selected' if professor and professor[2] == 'Banco de Dados' }}>Banco de Dados</option>
+        </select>
     </div>
     
     <div class="d-flex gap-2">

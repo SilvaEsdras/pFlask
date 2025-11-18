@@ -17,7 +17,14 @@
     
     <div class="mb-3">
         <label for="cidade" class="form-label">Cidade</label>
-        <input type="text" class="form-control" id="cidade" name="cidade" value="{{ aluno[3] if aluno else '' }}" required>
+        <select class="form-select" id="cidade" name="cidade" required>
+            <option value="" disabled {{ 'selected' if not aluno }}>Selecione uma cidade...</option>
+            <option value="Teresina" {{ 'selected' if aluno and aluno[3] == 'Teresina' }}>Teresina</option>
+            <option value="Parnaíba" {{ 'selected' if aluno and aluno[3] == 'Parnaíba' }}>Parnaíba</option>
+            <option value="Floriano" {{ 'selected' if aluno and aluno[3] == 'Floriano' }}>Floriano</option>
+            <option value="Picos" {{ 'selected' if aluno and aluno[3] == 'Picos' }}>Picos</option>
+            <option value="Campo Maior" {{ 'selected' if aluno and aluno[3] == 'Campo Maior' }}>Campo Maior</option>
+        </select>
     </div>
     
     <div class="d-flex gap-2">
