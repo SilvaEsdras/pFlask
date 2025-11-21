@@ -3,7 +3,8 @@ from flask import Flask, render_template, request, redirect, flash
 from dao.aluno_dao import AlunoDAO
 from dao.professor_dao import ProfessorDAO
 from dao.curso_dao import CursoDAO
-from dao.turma_dao import TurmaDAO # <--- ADICIONADO
+from dao.turma_dao import TurmaDAO
+from dao.matricula_dao import MatriculaDAO
 
 app = Flask(__name__)
 
@@ -14,7 +15,6 @@ app.secret_key = "uma_chave_muito_secreta_e_unica"
 def home():
     return render_template('index.html') 
 
-# --- ROTAS DE ALUNO (Existentes) ---
 @app.route('/aluno')
 def listar_aluno():
     dao = AlunoDAO()
@@ -55,7 +55,7 @@ def remover_aluno(id):
         flash(resultado["mensagem"], "danger")
     return redirect('/aluno')
 
-# --- ROTAS DE PROFESSOR (Existentes) ---
+
 @app.route('/professor')
 def listar_professor():
     dao = ProfessorDAO()
@@ -95,7 +95,7 @@ def remover_professor(id):
         flash(resultado["mensagem"], "danger")
     return redirect('/professor')
 
-# --- ROTAS DE CURSO (Existentes) ---
+
 @app.route('/curso')
 def listar_curso():
     dao = CursoDAO()
@@ -135,8 +135,6 @@ def remover_curso(id):
         flash(resultado["mensagem"], "danger")
     return redirect('/curso')
 
-
-# --- INÍCIO DAS NOVAS ROTAS DE TURMA ---
 
 @app.route('/turma')
 def listar_turma():
@@ -197,10 +195,65 @@ def remover_turma(id):
         flash(resultado["mensagem"], "danger")
     return redirect('/turma')
 
-# --- FIM DAS ROTAS DE TURMA ---
+
+@app.route('/matricula')
+def listar_matricula():
+    dao = MatriculaDAO()
+    lista_matriculas = dao.listar()
+    return render_template('matricula/lista.html', lista_matriculas=lista_matriculas)
+
+@app.route('/matricula/form')
+def form_matricula():
+    # Buscar listas para os selects
+    lista_alunos = AlunoDAO().listar()
+    # A listagem de turmas do TurmaDAO já traz informações ricas (curso, prof)
+    lista_turmas = TurmaDAO().listar() 
+    
+    return render_template('matricula/form.html', 
+                           matricula=None,
+                           lista_alunos=lista_alunos,
+                           lista_turmas=lista_turmas)
+
+@app.route('/matricula/editar/<int:id>')
+def editar_matricula(id):
+    lista_alunos = AlunoDAO().listar()
+    lista_turmas = TurmaDAO().listar()
+    
+    dao = MatriculaDAO()
+    matricula = dao.buscar_por_id(id)
+    
+    return render_template('matricula/form.html', 
+                           matricula=matricula,
+                           lista_alunos=lista_alunos,
+                           lista_turmas=lista_turmas)
+
+@app.route('/matricula/salvar/', methods=['POST'])
+@app.route('/matricula/salvar/<int:id>', methods=['POST'])
+def salvar_matricula(id=None):
+    aluno_id = request.form['aluno_id']
+    turma_id = request.form['turma_id']
+    
+    dao = MatriculaDAO()
+    resultado = dao.salvar(id, aluno_id, turma_id)
+    
+    if resultado["status"] == "ok":
+        flash("Matrícula salva com sucesso!", "success")
+    else:
+        flash(resultado["mensagem"], "danger")
+        
+    return redirect('/matricula')
+
+@app.route("/matricula/remover/<int:id>")
+def remover_matricula(id):
+    dao = MatriculaDAO()
+    resultado = dao.remover(id)
+    if resultado["status"] == "ok":
+        flash("Matrícula removida com sucesso!", "success")
+    else:
+        flash(resultado["mensagem"], "danger")
+    return redirect('/matricula')
 
 
-# --- Rotas dos exercícios anteriores ---
 @app.route('/sobre')
 def sobre_sistema():
     return render_template('sobre.html')

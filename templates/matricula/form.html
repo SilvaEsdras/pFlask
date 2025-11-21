@@ -1,0 +1,44 @@
+{% include 'cabecalho.html' %}
+{% include 'menu.html' %}
+
+<h1 class="mb-4">{{ 'Editar Matrícula' if matricula else 'Nova Matrícula' }}</h1>
+
+<div class="row">
+    <div class="col-md-8">
+        <form action="/matricula/salvar/{{ matricula[0] if matricula else '' }}" method="POST">
+            
+            <div class="mb-3">
+                <label for="aluno_id" class="form-label">Aluno</label>
+                <select name="aluno_id" id="aluno_id" class="form-select" required>
+                    <option value="">Selecione um aluno...</option>
+                    {% for aluno in lista_alunos %}
+                        <option value="{{ aluno[0] }}" 
+                                {% if matricula and aluno[0] == matricula[1] %}selected{% endif %}>
+                            {{ aluno[1] }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="turma_id" class="form-label">Turma</label>
+                <select name="turma_id" id="turma_id" class="form-select" required>
+                    <option value="">Selecione uma turma...</option>
+                    {% for turma in lista_turmas %}
+                        <option value="{{ turma[0] }}" 
+                                {% if matricula and turma[0] == matricula[2] %}selected{% endif %}>
+                            {{ turma[1] }} - {{ turma[2] }} ({{ turma[4] }})
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary">Salvar</button>
+                <a href="/matricula" class="btn btn-secondary">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% include 'rodape.html' %}
